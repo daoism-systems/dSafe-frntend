@@ -1,33 +1,39 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
+import AddDelegate from './components/AddDelegate'
+import ViewDelegates from './components/ViewDelegates'
+import SafeTable from './components/SafeTable'
+import Navbar from './components/NavBar'
+import AboutSafe from './components/AboutSafe'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [activePage, setActivePage] = useState('Add delegate');
+
+  const renderPage = () => {
+    switch (activePage) {
+      case 'Add delegate':
+        return <AddDelegate />;
+      case 'View Delegate':
+        return <ViewDelegates />;
+      // case 'Create transaction':
+      //   return <CreateTransaction />;
+      // case 'Add confirmation':
+      //   return <AddConfirmation />;
+      // case 'Get All transactions':
+      //   return <GetAllTransactions />;
+      // case 'Get a transaction':
+      //   return <GetTransaction />;
+      case 'About Safe':
+        return <AboutSafe />;
+      default:
+        return <div>Page not found</div>;
+    }
+  };
 
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <Navbar activePage={activePage} setActivePage={setActivePage} />
+      {renderPage()}
     </>
   )
 }
