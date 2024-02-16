@@ -30,17 +30,21 @@ const AddDelegate: React.FC = () => {
   };
 
   return (
+    <div>
+      <h2 className='text-black text-2xl font-bold'>Add Delegate</h2>
     <form onSubmit={handleSubmit}>
       <div>
-        <label htmlFor="delegateAddress">Delegate Address:</label>
-        <input
-          type="text"
-          id="delegateAddress"
-          value={delegateAddress}
-          onChange={handleDelegateChange}
-          maxLength={42}
-          placeholder="0x123..."
-        />
+      <label className="form-control w-full max-w-xs">
+  <div className="label">
+    <span className="label-text">What is your name?</span>
+    <span className="label-text-alt">Top Right label</span>
+  </div>
+  <input type="text" placeholder="Type here" className="input input-bordered w-full max-w-xs" />
+  <div className="label">
+    <span className="label-text-alt">Bottom Left label</span>
+    <span className="label-text-alt">Bottom Right label</span>
+  </div>
+</label>
       </div>
       <div>
         <label htmlFor="safeAddress">Safe Address:</label>
@@ -51,12 +55,13 @@ const AddDelegate: React.FC = () => {
           onChange={handleSafeChange}
           maxLength={42}
           placeholder="0x456..."
-        />
+          />
       </div>
       <button type="submit" disabled={delegateAddress.length !== 42 || safeAddress.length !== 42}>
         Add Delegate
       </button>
     </form>
+          </div>
   );
 };
 
