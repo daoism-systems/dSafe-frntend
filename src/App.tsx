@@ -3,11 +3,11 @@ import './App.css'
 import AddDelegate from './components/AddDelegate'
 import ViewDelegates from './components/ViewDelegates'
 import SafeTable from './components/SafeTable'
-import Navbar from './components/NavBar'
 import AboutSafe from './components/AboutSafe'
+import Menu from './components/Menu'
 
 function App() {
-  const [activePage, setActivePage] = useState('Add delegate');
+  const [activePage, setActivePage] = useState('Create transaction');
 
   const renderPage = () => {
     switch (activePage) {
@@ -31,10 +31,14 @@ function App() {
   };
 
   return (
-    <>
-      <Navbar activePage={activePage} setActivePage={setActivePage} />
-      {renderPage()}
-    </>
+    <div className='bg-gray-100 min-h-[100vh] w-[100vw] flex flex-col items-center pt-24 mx-auto px-24'>
+      <div>
+        <Menu activePage={activePage} setActivePage={setActivePage} />
+        <div className='border border-gray-100 rounded-lg bg-white mt-12 w-full p-12'>
+          {renderPage()}
+        </div>
+      </div>
+    </div>
   )
 }
 
