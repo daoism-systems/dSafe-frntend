@@ -8,6 +8,7 @@ import {
 import { getSafeSingletonDeployment } from '@safe-global/safe-deployments'
 import AnimatedInput from './AnimatedInput'
 import { Label, Select } from 'flowbite-react'
+import AnimatedSelect from './animatedSelect'
 
 interface DelegateInfo {
   delegate: string
@@ -46,34 +47,15 @@ const ViewDelegates: React.FC = () => {
   return (
     <div>
       <div>
-        <h2 className="text-black text-2xl font-bold  text-left">
+        <h2 className="text-black text-2xl font-bold  text-left mb-6">
           View Delegates
         </h2>
-        <div className="flex max-w-md flex-col gap-4">
-          <div className="flex flex-col gap-4 mt-5">
-            <div>
-              <Label
-                htmlFor="safeSelect"
-                className={`absolute left-2 transition-all duration-300 ease-in-out top-[-12px] text-sm text-gray-700 bg-white px-1 text-black`}
-              >
-                Select Safe
-              </Label>
-              <select
-                id="safeSelect"
-                onChange={handleSafeAddressChange}
-                value={selectedSafeAddress}
-                className={`w-full text-sm placeholder:text-sm p-4 border  rounded focus:border-gray-700 outline-none`}
-              >
-                <option value="">Select a Safe Address</option>
-                {safes.map((safe) => (
-                  <option key={safe} value={safe}>
-                    {safe}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-        </div>
+        <AnimatedSelect
+          options={safes}
+          value={selectedSafeAddress}
+          setValue={setSelectedSafeAddress}
+          placeholder="Select Safe"
+        />
       </div>
     </div>
   )
