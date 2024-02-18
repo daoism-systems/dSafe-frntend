@@ -2,32 +2,31 @@ import React, { useEffect, useState } from 'react'
 
 import { Button, Label, TextInput } from 'flowbite-react'
 
-interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
+interface Props extends React.SelectHTMLAttributes<HTMLSelectElement> {
   value: string
   setValue: (arg0: string) => void
+  options: string[]
+  placeholder: string
 }
 
-const AnimatedInput = ({ value, setValue, placeholder, ...props }: Props) => {
+const AnimatedSelect = ({
+  value,
+  setValue,
+  options,
+  placeholder,
+  ...props
+}: Props) => {
   const [isFocused, setIsFocused] = useState(false)
-  const [error, setError] = useState(false)
+  //   const [error, setError] = useState(false)
 
   const handleFocus = () => setIsFocused(true)
   const handleBlur = () => {
     if (!value) {
+      console.log({ value })
+
       setIsFocused(false)
     }
   }
-
-  useEffect(() => {
-    if (value !== '' && !!props.pattern) {
-      const regex = new RegExp(`${props.pattern}`)
-      if (!regex.test(value)) {
-        setError(true)
-      } else {
-        setError(false)
-      }
-    }
-  }, [value])
 
   return (
     <div className={`relative  ${isFocused || value ? 'focused' : ''}`}>
@@ -41,18 +40,23 @@ const AnimatedInput = ({ value, setValue, placeholder, ...props }: Props) => {
       >
         {placeholder}
       </Label>
-      <input
-        id={props.id}
-        type="text"
-        onFocus={handleFocus}
-        onBlur={handleBlur}
+      <select
+        id="safeSelect"
         onChange={(e) => setValue(e.target.value)}
         value={value}
-        className={`w-full text-sm placeholder:text-sm p-4 border  rounded focus:border-gray-700 outline-none ${error ? 'border-red-500' : 'border-gray-300'}`}
-        pattern={props.pattern}
-      />
+        className={`w-full text-sm placeholder:text-sm p-4 border  rounded focus:border-gray-700 outline-none`}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
+      >
+        <option value=""></option>
+        {options.map((option) => (
+          <option key={option} value={option}>
+            {option}
+          </option>
+        ))}
+      </select>
     </div>
   )
 }
 
-export default AnimatedInput
+export default AnimatedSelect

@@ -6,6 +6,7 @@ import SafeTable from './components/SafeTable'
 import AboutSafe from './components/AboutSafe'
 import Menu from './components/Menu'
 import { ConnectButton } from '@rainbow-me/rainbowkit'
+import AddTransaction from './components/AddTransaction'
 
 function App() {
   const [activePage, setActivePage] = useState('Create transaction')
@@ -16,8 +17,8 @@ function App() {
         return <AddDelegate />
       case 'View Delegate':
         return <ViewDelegates />
-      // case 'Create transaction':
-      //   return <CreateTransaction />;
+      case 'Create transaction':
+        return <AddTransaction />;
       // case 'Add confirmation':
       //   return <AddConfirmation />;
       // case 'Get All transactions':

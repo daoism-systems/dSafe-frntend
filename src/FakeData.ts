@@ -20,6 +20,20 @@ export const fakeSafesOfOwner = [
   '0x6fa4ef12fA2Fea9e4eBD7E46C0Ffff8bfEF1a0F8',
 ]
 
+export const testUsdt = '0x7169D38820dfd117C3FA1f22a697dBA58d90BA06'
+
+export const trxInput = {
+  to: testUsdt,
+  value: 1,
+  data: '0x',
+  operation: 0,
+  safeTxGas: 0,
+  baseGas: 0,
+  gasPrice: 0,
+  gasToken: '0x0000000000000000000000000000000000000000',
+  refundReceiver: '0x0000000000000000000000000000000000000000',
+}
+
 export const fakeSafeOwnerData = [
   { owner: '0xabcd', safeAddress: '0x1234', threshold: 3 },
   { owner: '0xbcde', safeAddress: '0x2345', threshold: 2 },
