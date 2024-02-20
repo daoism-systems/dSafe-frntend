@@ -12,7 +12,8 @@ import {
   useWriteContract,
 } from 'wagmi'
 import { readContract } from 'viem/actions'
-import DSafe from '@dsafe/sdk'
+import definition from '../definitions/definitions.dev.js'
+import DSafe from '@daoism-systems/dsafe-sdk'
 import { Abi, createPublicClient, getContract, http, toBytes } from 'viem'
 import { sepolia } from 'viem/chains'
 import { ethers } from 'ethers'
@@ -26,7 +27,7 @@ type Props = {}
 const chainId = CHAIN_ID
 const ceramicNodeNetwork = CERAMIC_NETWORK
 
-const dsafe = new DSafe(chainId, ceramicNodeNetwork)
+const dsafe = new DSafe(chainId, ceramicNodeNetwork, definition)
 
 const AddTransaction = (props: Props) => {
   const [isTest, setIsTest] = useState(true)

@@ -2,7 +2,7 @@ import React from 'react'
 import AnimatedInput from './AnimatedInput'
 import { Button } from 'flowbite-react'
 import { fakeTxsData } from '../FakeData'
-import DSafe from '@dsafe/sdk'
+import DSafe from '@daoism-systems/dsafe-sdk'
 import { CERAMIC_NETWORK, CERAMIC_NODE, CHAIN_ID } from '../constants'
 
 const GetTransaction = () => {
