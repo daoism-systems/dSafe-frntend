@@ -2,6 +2,8 @@ import React from 'react'
 import AnimatedInput from './AnimatedInput'
 import { Button } from 'flowbite-react'
 import { fakeTxsData } from '../FakeData'
+import DSafe from '@dsafe/sdk'
+import { CERAMIC_NETWORK, CERAMIC_NODE, CHAIN_ID } from '../constants'
 
 const GetTransaction = () => {
   const [transactionHash, setTransactionHash] = React.useState('')
@@ -10,15 +12,37 @@ const GetTransaction = () => {
     string | number
   > | null>(null)
 
-  const handleTransactionSearch = () => {
+  const handleTransactionSearch = async (
+    e: React.MouseEvent<HTMLButtonElement>,
+  ) => {
+    e.preventDefault()
     // TODO: Modify how transaction is being fetched on search
+    if (transactionHash) {
+      const dSafe = new DSafe(CHAIN_ID, CERAMIC_NETWORK)
 
-    // Assuming there's a function to fetch transaction details by hash
-    // This is a placeholder for the actual fetch logic
-    const fetchedTransaction = fakeTxsData.find(
-      (tx) => tx.safeTransactionHash === transactionHash,
-    )
-    setTransaction(fetchedTransaction || null)
+      // arguements for dSafe Request
+      const httpMethod = 'GET'
+      const apiUrl = `/v1/multisig-transactions/${transactionHash}/`
+      const payload = {
+        safeTxHash: transactionHash,
+      }
+
+      const transactionsResponse = await dSafe.fetchLegacy(
+        httpMethod,
+        apiUrl,
+        payload,
+        CHAIN_ID,
+      )
+
+      console.log({ transactionsResponse })
+
+      // Assuming there's a function to fetch transaction details by hash
+      // This is a placeholder for the actual fetch logic
+      const fetchedTransaction = fakeTxsData.find(
+        (tx) => tx.safeTransactionHash === transactionHash,
+      )
+      setTransaction(fetchedTransaction || null)
+    }
   }
 
   return (
@@ -107,12 +131,6 @@ const GetTransaction = () => {
                 />
               </div>
             </div>
-            <Button
-              type="submit"
-              className="bg-teal-500 text-white hover:bg-teal-600 cursor-pointer disabled:cursor-not-allowed text-center"
-            >
-              {`Add Confirmation`}
-            </Button>
           </div>
         </div>
       )}

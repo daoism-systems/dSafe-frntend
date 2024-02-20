@@ -12,7 +12,7 @@ import GetTransaction from './components/GetTransaction'
 import GetAllTransactions from './components/GetAllTransactions'
 
 function App() {
-  const [activePage, setActivePage] = useState('Create transaction')
+  const [activePage, setActivePage] = useState('Get a transaction')
 
   const renderPage = () => {
     switch (activePage) {
