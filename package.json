@@ -10,16 +10,19 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@daoism-systems/dsafe-sdk": "^1.1.2",
     "@rabby-wallet/rabbykit": "^0.0.4",
     "@rainbow-me/rainbowkit": "^2.0.0",
     "@safe-global/safe-deployments": "^1.32.0",
     "@tanstack/react-query": "^5.21.2",
     "@wagmi/core": "1",
+    "axios": "^1.6.7",
+    "ethers": "5",
     "flowbite": "^2.3.0",
     "flowbite-react": "^0.7.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "viem": "2.x",
+    "viem": "2.7.11",
     "wagmi": "^2.5.7"
   },
   "devDependencies": {
