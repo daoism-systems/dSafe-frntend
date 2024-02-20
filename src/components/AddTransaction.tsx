@@ -19,11 +19,12 @@ import { ethers } from 'ethers'
 
 import { arrayify } from 'ethers/lib/utils.js'
 import axios, { AxiosRequestConfig } from 'axios'
+import { CERAMIC_NETWORK, CHAIN_ID } from '../constants'
 
 type Props = {}
 
-const chainId = 'sepolia'
-const ceramicNodeNetwork = 'local'
+const chainId = CHAIN_ID
+const ceramicNodeNetwork = CERAMIC_NETWORK
 
 const dsafe = new DSafe(chainId, ceramicNodeNetwork)
 
