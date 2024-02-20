@@ -1,19 +1,14 @@
-import DSafe from '@dsafe/sdk'
-import SafeDetails from './SafeDetails'
-import SafeTable from './SafeTable'
-import React from 'react'
+import SafeDetails from "./SafeDetails"
+import SafeTable from "./SafeTable"
+import React from 'react';
 
-interface Props {
-  dsafe: DSafe | null
+const AboutSafe: React.FC = () => {
+    return (
+        <>
+        <SafeDetails />
+        <SafeTable />
+        </>
+    )
 }
 
-const AboutSafe = ({ dsafe }: Props) => {
-  return (
-    <>
-      <SafeDetails />
-      <SafeTable />
-    </>
-  )
-}
-
-export default AboutSafe
+export default AboutSafe;

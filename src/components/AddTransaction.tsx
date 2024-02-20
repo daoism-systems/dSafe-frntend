@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import AnimatedInput from './AnimatedInput'
 import { Button } from 'flowbite-react'
-import { trxInput } from '../FakeData'
+import AnimatedSelect from './animatedSelect'
+import { fakeSafesOfOwner, trxInput } from '../FakeData'
 import { getSafeSingletonDeployment } from '@safe-global/safe-deployments'
 import {
   useAccount,
@@ -15,14 +16,20 @@ import definition from '../definitions/definitions.dev.js'
 import DSafe from '@daoism-systems/dsafe-sdk'
 import { Abi, createPublicClient, getContract, http, toBytes } from 'viem'
 import { sepolia } from 'viem/chains'
+import { ethers } from 'ethers'
+
+import { arrayify } from 'ethers/lib/utils.js'
 import axios, { AxiosRequestConfig } from 'axios'
-import { CHAIN_ID } from '../constants'
+import { CERAMIC_NETWORK, CHAIN_ID } from '../constants'
 
-interface Props {
-  dsafe: DSafe | null
-}
+type Props = {}
 
-const AddTransaction = ({ dsafe }: Props) => {
+const chainId = CHAIN_ID
+const ceramicNodeNetwork = CERAMIC_NETWORK
+
+const dsafe = new DSafe(chainId, ceramicNodeNetwork, definition)
+
+const AddTransaction = (props: Props) => {
   const [isTest, setIsTest] = useState(true)
   const [safeAddress, setSafeAddress] = useState('')
   const [nonce, setNonce] = useState('')
@@ -203,9 +210,9 @@ const AddTransaction = ({ dsafe }: Props) => {
 
               const options: AxiosRequestConfig = {}
               options.method = 'POST'
-              options.url = dsafe?.generateApiUrl(
+              options.url = dsafe.generateApiUrl(
                 createTransactionRoute,
-                CHAIN_ID,
+                chainId,
               )
               if (payload?.apiData !== undefined) {
                 options.data = payload.apiData
@@ -217,21 +224,24 @@ const AddTransaction = ({ dsafe }: Props) => {
                 console.log({ e: e.response.data })
                 throw e
               }
-
-              const init = dsafe?.initialised
-
-              console.log({ init })
-
-              const dsafeResponse = await dsafe?.fetchLegacy(
+              const dsafeResponse = await dsafe.fetchLegacy(
                 'POST',
                 createTransactionRoute,
                 payload,
-                CHAIN_ID,
+                chainId,
               )
               console.log({ dsafeResponse })
             },
           },
         )
+
+        // TODO: get SafeTransaction Hash
+
+        // TODO: get signature
+
+        // TODO: send transaction to API
+
+        // TODO: send transaction to dSafe
       }
     }
   }

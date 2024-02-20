@@ -7,13 +7,8 @@ import React, {
 
 import { Button, Label, TextInput } from 'flowbite-react'
 import AnimatedInput from './AnimatedInput'
-import DSafe from '@dsafe/sdk'
 
-interface Props {
-  dsafe: DSafe | null
-}
-
-const AddDelegate = ({ dsafe }: Props) => {
+const AddDelegate: React.FC = () => {
   const [delegateAddress, setDelegateAddress] = useState<string>('')
   const [safeAddress, setSafeAddress] = useState<string>('')
 

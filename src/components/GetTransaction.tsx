@@ -5,11 +5,7 @@ import { fakeTxsData } from '../FakeData'
 import DSafe from '@daoism-systems/dsafe-sdk'
 import { CERAMIC_NETWORK, CERAMIC_NODE, CHAIN_ID } from '../constants'
 
-interface Props {
-  dsafe: DSafe | null
-}
-
-const GetTransaction = ({ dsafe }: Props) => {
+const GetTransaction = () => {
   const [transactionHash, setTransactionHash] = React.useState('')
   const [transaction, setTransaction] = React.useState<Record<
     string,

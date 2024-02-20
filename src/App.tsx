@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import './App.css'
 import AddDelegate from './components/AddDelegate'
 import ViewDelegates from './components/ViewDelegates'
@@ -10,48 +10,26 @@ import AddTransaction from './components/AddTransaction'
 import AddConfirmation from './components/AddConfirmation'
 import GetTransaction from './components/GetTransaction'
 import GetAllTransactions from './components/GetAllTransactions'
-import DSafe from '@dsafe/sdk'
-import { useEthersProvider } from './utils.ts/ethers'
-import { sepolia } from 'viem/chains'
-import { CERAMIC_NETWORK, CHAIN_ID } from './constants'
-import { useClient, useConfig } from 'wagmi'
 
 function App() {
-  const [activePage, setActivePage] = useState('Create transaction')
-  const [dsafe, setDsafe] = useState<DSafe | null>(null)
-  const provider = useEthersProvider({ chainId: sepolia.id })
-  const config = useConfig()
-  const client = useClient({
-    chainId: sepolia.id,
-    config,
-  })
-
-  useEffect(() => {
-    console.log({ client })
-
-    const dsafe = new DSafe(CHAIN_ID, CERAMIC_NETWORK)
-    dsafe.initializeDIDOnClient(provider).then((res) => {
-      console.log({ res, did: dsafe?.did })
-      setDsafe(dsafe)
-    })
-  }, [provider])
+  const [activePage, setActivePage] = useState('Get a transaction')
 
   const renderPage = () => {
     switch (activePage) {
       case 'Add delegate':
-        return <AddDelegate dsafe={dsafe} />
+        return <AddDelegate />
       case 'View Delegate':
-        return <ViewDelegates dsafe={dsafe} />
+        return <ViewDelegates />
       case 'Create transaction':
-        return <AddTransaction dsafe={dsafe} />
+        return <AddTransaction />
       case 'Add confirmation':
-        return <AddConfirmation dsafe={dsafe} />
+        return <AddConfirmation />
       case 'Get All transactions':
-        return <GetAllTransactions dsafe={dsafe} />
+        return <GetAllTransactions />
       case 'Get a transaction':
-        return <GetTransaction dsafe={dsafe} />
+        return <GetTransaction />
       case 'About Safe':
-        return <AboutSafe dsafe={dsafe} />
+        return <AboutSafe />
       default:
         return <div>Page not found</div>
     }

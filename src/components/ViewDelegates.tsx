@@ -10,7 +10,6 @@ import AnimatedInput from './AnimatedInput'
 import { Label, Select } from 'flowbite-react'
 import AnimatedSelect from './animatedSelect'
 import If from './If'
-import DSafe from '@dsafe/sdk'
 
 interface DelegateInfo {
   delegate: string
@@ -26,11 +25,7 @@ interface SelectSafeProps {
   data: SafeAddressData[]
 }
 
-interface Props {
-  dsafe: DSafe | null
-}
-
-const ViewDelegates = ({ dsafe }: Props) => {
+const ViewDelegates: React.FC = () => {
   const [selectedSafeAddress, setSelectedSafeAddress] = useState<string>('')
   const [safes, setSafes] = useState<string[]>([])
   const [delegates, setDelegates] = useState<Record<string, any>[]>([])

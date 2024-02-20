@@ -8,16 +8,14 @@ import { Button } from 'flowbite-react'
 import DSafe from '@daoism-systems/dsafe-sdk'
 import { useAccount } from 'wagmi'
 
-interface Props {
-  dsafe: DSafe | null
-}
+type Props = {}
 
 const chainId = 'sepolia'
 const ceramicNodeNetwork = 'local'
 
 const dsafe = new DSafe(chainId, ceramicNodeNetwork)
 
-const AddConfirmation = ({ dsafe }: Props) => {
+const AddConfirmation = (props: Props) => {
   const [safes, setSafes] = useState<string[]>([])
   const [transactions, setTransactions] = useState<
     Record<string, string | number>[]
