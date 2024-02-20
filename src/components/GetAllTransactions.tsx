@@ -3,8 +3,13 @@ import AnimatedInput from './AnimatedInput'
 import { fakeSafesOfOwner, fakeTxsData } from '../FakeData'
 import AnimatedSelect from './animatedSelect'
 import If from './If'
+import DSafe from '@dsafe/sdk'
 
-const GetAllTransactions = () => {
+interface Props {
+  dsafe: DSafe | null
+}
+
+const GetAllTransactions = ({ dsafe }: Props) => {
   const [selectedSafe, setSelectedSafe] = React.useState<string>('')
   const [selectedTransaction, setSelectedTransaction] =
     React.useState<string>('')
@@ -13,6 +18,12 @@ const GetAllTransactions = () => {
   >([])
   const [transaction, setTransaction] =
     React.useState<Record<string, string | number>>()
+
+  useEffect(() => {
+    // STEP1: Fetch safes of owner
+
+    console.log({ did: dsafe?.did })
+  }, [])
 
   useEffect(() => {
     // TODO: fetch transactions of safe
