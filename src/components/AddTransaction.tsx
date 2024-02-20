@@ -2,14 +2,33 @@ import React, { useEffect, useState } from 'react'
 import AnimatedInput from './AnimatedInput'
 import { Button } from 'flowbite-react'
 import AnimatedSelect from './animatedSelect'
-import { fakeSafesOfOwner } from '../FakeData'
+import { fakeSafesOfOwner, trxInput } from '../FakeData'
 import { getSafeSingletonDeployment } from '@safe-global/safe-deployments'
-import { useReadContract, useWriteContract } from 'wagmi'
+import {
+  useAccount,
+  useClient,
+  useReadContract,
+  useSignMessage,
+  useWriteContract,
+} from 'wagmi'
 import { readContract } from 'viem/actions'
+import DSafe from '@dsafe/sdk'
+import { Abi, createPublicClient, getContract, http, toBytes } from 'viem'
+import { sepolia } from 'viem/chains'
+import { ethers } from 'ethers'
+
+import { arrayify } from 'ethers/lib/utils.js'
+import axios, { AxiosRequestConfig } from 'axios'
 
 type Props = {}
 
+const chainId = 'sepolia'
+const ceramicNodeNetwork = 'local'
+
+const dsafe = new DSafe(chainId, ceramicNodeNetwork)
+
 const AddTransaction = (props: Props) => {
+  const [isTest, setIsTest] = useState(true)
   const [safeAddress, setSafeAddress] = useState('')
   const [nonce, setNonce] = useState('')
   const [to, setTo] = useState('')
@@ -25,6 +44,12 @@ const AddTransaction = (props: Props) => {
 
   const [safeOptions, setSafeOptions] = useState<string[]>([])
 
+  const account = useAccount()
+  const client = useClient({
+    chainId: sepolia.id,
+  })
+  const { signMessage } = useSignMessage()
+
   const safeAbi = getSafeSingletonDeployment()?.abi
   const result = useReadContract({
     abi: safeAbi,
@@ -34,8 +59,35 @@ const AddTransaction = (props: Props) => {
 
   useEffect(() => {
     // TODO: fetch safe addresses from dSafe
+    // const apiRoute = `/v1/owners/${account.address}/safes/`
+    // dsafe
+    //   .fetchLegacy(
+    //     'GET',
+    //     apiRoute,
+    //     {
+    //       address: account.address,
+    //     },
+    //     chainId,
+    //   )
+    //   .then((res) => {
+    //     console.log({ res })
+    //     setSafeOptions(fakeSafesOfOwner)
+    //   })
 
-    setSafeOptions(fakeSafesOfOwner)
+    const inputs = trxInput
+
+    if (isTest) {
+      setSafeAddress(trxInput.safeAddress)
+      setTo(trxInput.to)
+      setValue(trxInput.value.toString())
+      setData(trxInput.data)
+      setOperation(trxInput.operation.toString())
+      setSafeTxGas(trxInput.safeTxGas.toString())
+      setBaseGas(trxInput.baseGas.toString())
+      setGasPrice(trxInput.gasPrice.toString())
+      setGasToken(trxInput.gasToken)
+      setRefundReceiver(trxInput.refundReceiver)
+    }
   }, [])
 
   useEffect(() => {
@@ -65,6 +117,7 @@ const AddTransaction = (props: Props) => {
     ) {
       isValid = false
     }
+    return isValid
     setFormValid(isValid)
   }
 
@@ -84,15 +137,111 @@ const AddTransaction = (props: Props) => {
       refundReceiver,
     })
 
-    validateForm()
+    const isValid = validateForm()
 
-    // TODO: get SafeTransaction Hash
+    if (isValid) {
+      if (safeAbi !== undefined && client !== undefined) {
+        const safeInstance = getContract({
+          abi: safeAbi,
+          address: safeAddress as `0x${string}`,
+          client,
+        })
 
-    // TODO: get signature
+        const safeTxHash = await safeInstance.read.getTransactionHash([
+          to,
+          value,
+          data,
+          operation,
+          safeTxGas,
+          baseGas,
+          gasPrice,
+          gasToken,
+          refundReceiver,
+          nonce,
+        ])
 
-    // TODO: send transaction to API
+        console.log({ safeTxHash, type: typeof safeTxHash })
 
-    // TODO: send transaction to dSafe
+        await signMessage(
+          {
+            account: account.address,
+            message: { raw: toBytes(`${safeTxHash}` as `0x${string}`) },
+          },
+          {
+            onSuccess: async (response) => {
+              const signature = response
+                .replace(/1b$/, '1f')
+                .replace(/1c$/, '20')
+              console.log({ signature })
+              const payload = {
+                safe: safeAddress,
+                sender: account.address,
+                contractTransactionHash: safeTxHash,
+                to: to,
+                data: data,
+                baseGas: baseGas,
+                gasPrice: gasPrice,
+                safeTxGas: safeTxGas,
+                value: value,
+                operation: operation.toString(),
+                nonce: nonce,
+                signature,
+                apiData: {
+                  safe: safeAddress,
+                  sender: account.address,
+                  contractTransactionHash: safeTxHash,
+                  to: to,
+                  data: data,
+                  gasToken: gasToken,
+                  baseGas: baseGas,
+                  gasPrice: gasPrice,
+                  refundReceiver: refundReceiver,
+                  safeTxGas: safeTxGas,
+                  value: trxInput.value,
+                  operation: trxInput.operation,
+                  nonce: nonce,
+                  signature,
+                },
+              }
+
+              const createTransactionRoute = `/v1/safes/${safeAddress}/multisig-transactions/`
+
+              const options: AxiosRequestConfig = {}
+              options.method = 'POST'
+              options.url = dsafe.generateApiUrl(
+                createTransactionRoute,
+                chainId,
+              )
+              if (payload?.apiData !== undefined) {
+                options.data = payload.apiData
+              }
+              try {
+                const result = await axios.request(options)
+                console.log({ result })
+              } catch (e: any) {
+                console.log({ e: e.response.data })
+                throw e
+              }
+              const dsafeResponse = await dsafe.fetchLegacy(
+                'POST',
+                createTransactionRoute,
+                payload,
+                chainId,
+              )
+              console.log({ dsafeResponse })
+            },
+          },
+        )
+
+        // TODO: get SafeTransaction Hash
+
+        // TODO: get signature
+
+        // TODO: send transaction to API
+
+        // TODO: send transaction to dSafe
+      }
+    }
   }
 
   return (

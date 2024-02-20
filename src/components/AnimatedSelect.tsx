@@ -5,7 +5,7 @@ import { Button, Label, TextInput } from 'flowbite-react'
 interface Props extends React.SelectHTMLAttributes<HTMLSelectElement> {
   value: string
   setValue: (arg0: string) => void
-  options: string[]
+  options: string[] | Record<string, string | number>[]
   placeholder: string
 }
 

@@ -8,6 +8,8 @@ import Menu from './components/Menu'
 import { ConnectButton } from '@rainbow-me/rainbowkit'
 import AddTransaction from './components/AddTransaction'
 import AddConfirmation from './components/AddConfirmation'
+import GetTransaction from './components/GetTransaction'
+import GetAllTransactions from './components/GetAllTransactions'
 
 function App() {
   const [activePage, setActivePage] = useState('Create transaction')
@@ -22,10 +24,10 @@ function App() {
         return <AddTransaction />
       case 'Add confirmation':
         return <AddConfirmation />
-      // case 'Get All transactions':
-      //   return <GetAllTransactions />;
-      // case 'Get a transaction':
-      //   return <GetTransaction />;
+      case 'Get All transactions':
+        return <GetAllTransactions />
+      case 'Get a transaction':
+        return <GetTransaction />
       case 'About Safe':
         return <AboutSafe />
       default:

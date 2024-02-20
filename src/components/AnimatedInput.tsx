@@ -4,7 +4,7 @@ import { Button, Label, TextInput } from 'flowbite-react'
 
 interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
   value: string
-  setValue: (arg0: string) => void
+  setValue?: (arg0: string) => void
 }
 
 const AnimatedInput = ({ value, setValue, placeholder, ...props }: Props) => {
@@ -19,7 +19,7 @@ const AnimatedInput = ({ value, setValue, placeholder, ...props }: Props) => {
   }
 
   useEffect(() => {
-    if (value !== '' && !!props.pattern) {
+    if (value !== '' && !!props.pattern && !props.disabled) {
       const regex = new RegExp(`${props.pattern}`)
       if (!regex.test(value)) {
         setError(true)
@@ -46,10 +46,11 @@ const AnimatedInput = ({ value, setValue, placeholder, ...props }: Props) => {
         type="text"
         onFocus={handleFocus}
         onBlur={handleBlur}
-        onChange={(e) => setValue(e.target.value)}
+        onChange={setValue ? (e) => setValue(e.target.value) : () => null}
         value={value}
         className={`w-full text-sm placeholder:text-sm p-4 border  rounded focus:border-gray-700 outline-none ${error ? 'border-red-500' : 'border-gray-300'}`}
         pattern={props.pattern}
+        {...props}
       />
     </div>
   )

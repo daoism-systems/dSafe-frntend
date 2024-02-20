@@ -1,13 +1,13 @@
 export const fakeDelegateData = [
   {
-    safeAddress: '0xSafeAddress1',
+    safeAddress: '0x6fa4ef12fA2Fea9e4eBD7E46C0Ffff8bfEF1a0F8',
     delegates: [
       { delegate: '0xabcd', delegator: '0x1234' },
       { delegate: '0xef01', delegator: '0x5678' },
     ],
   },
   {
-    safeAddress: '0xSafeAddress2',
+    safeAddress: '0x6fa4ef12fA2Fea9e4eBD7E46C0Ffff8bfEF1a0F8',
     delegates: [
       { delegate: '0x1234', delegator: '0x9abc' },
       { delegate: '0x5678', delegator: '0xdef0' },
@@ -23,6 +23,7 @@ export const fakeSafesOfOwner = [
 export const testUsdt = '0x7169D38820dfd117C3FA1f22a697dBA58d90BA06'
 
 export const trxInput = {
+  safeAddress: '0x6fa4ef12fA2Fea9e4eBD7E46C0Ffff8bfEF1a0F8',
   to: testUsdt,
   value: 1,
   data: '0x',
@@ -33,6 +34,29 @@ export const trxInput = {
   gasToken: '0x0000000000000000000000000000000000000000',
   refundReceiver: '0x0000000000000000000000000000000000000000',
 }
+
+export const fakeTxsData = [
+  {
+    safeTransactionHash:
+      '0x493df89e5e882429225696688a476bf7021cc82f8e36c5de265471ab52632285',
+    network: 'eip155:11155111',
+    trxHash:
+      '0x493df89e5e882429225696688a476bf7021cc82f8e36c5de265471ab52632285',
+    executor: '0x67BE2C36e75B7439ffc2DCb99dBdF4fbB2455930',
+    signature:
+      '0x95d691f2f9f009a5cdb36397ad1a15fe4251acb69a38c112699e1a0e4924dbbb64b7cc08bd315d05d53f5553d74d1d0412e7388f02c8fc368e30f91c8b36c57a1f',
+    nonce: 1,
+    to: testUsdt,
+    value: 1,
+    data: '0x',
+    operation: 0,
+    safeTxGas: 0,
+    baseGas: 0,
+    gasPrice: 0,
+    gasToken: '0x0000000000000000000000000000000000000000',
+    refundReceiver: '0x0000000000000000000000000000000000000000',
+  },
+]
 
 export const fakeSafeOwnerData = [
   { owner: '0xabcd', safeAddress: '0x1234', threshold: 3 },
