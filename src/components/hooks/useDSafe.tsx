@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { DSafe } from '@dsafe/sdk';
+import { DSafe } from '@daoism-systems/dsafe-sdk';
 
 const useDSafe = () => {
   const [dSafe, setDSafe] = useState<DSafe | null>(null);

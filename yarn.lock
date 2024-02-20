@@ -837,6 +837,29 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@daoism-systems/dsafe-sdk@npm:^1.1.2":
+  version: 1.1.2
+  resolution: "@daoism-systems/dsafe-sdk@npm:1.1.2"
+  dependencies:
+    "@apollo/client": "npm:^3.8.7"
+    "@ceramicnetwork/http-client": "npm:^3.0.5"
+    "@composedb/client": "npm:^0.5.2"
+    "@composedb/devtools-node": "npm:^0.5.2"
+    "@composedb/types": "npm:^0.5.1"
+    "@didtools/pkh-ethereum": "npm:^0.4.1"
+    "@safe-global/safe-deployments": "npm:^1.28.0"
+    "@types/graphql": "npm:^14.5.0"
+    axios: "npm:^1.6.0"
+    did-session: "npm:^2.1.1"
+    dids: "npm:^4.0.4"
+    graphql: "npm:^16.8.1"
+    key-did-provider-ed25519: "npm:^3.0.2"
+    key-did-resolver: "npm:^3.0.0"
+    uint8arrays: "npm:^4.0.9"
+  checksum: 558eda013a7cd0210bf7f2e712b9f515d6fecbf3410ae9cb19fa7db60c29b66cd0aa6075331cac42c18dfbbfa032b0a439ef5b6dc8f2abc16370665238e243ab
+  languageName: node
+  linkType: hard
+
 "@didtools/cacao@npm:^2.0.0, @didtools/cacao@npm:^2.1.0":
   version: 2.1.0
   resolution: "@didtools/cacao@npm:2.1.0"
@@ -1049,29 +1072,6 @@ __metadata:
   dependencies:
     codeco: "npm:^1.2.0"
   checksum: f753d42467466fba4406797b331094415926b7f17d58cd977fe9d4ba6042694666d5a14af8508faa971980310156ddf0ff45098e993b39750cbc9e444ba4253b
-  languageName: node
-  linkType: hard
-
-"@dsafe/sdk@npm:^1.1.0":
-  version: 1.1.0
-  resolution: "@dsafe/sdk@npm:1.1.0"
-  dependencies:
-    "@apollo/client": "npm:^3.8.7"
-    "@ceramicnetwork/http-client": "npm:^3.0.5"
-    "@composedb/client": "npm:^0.5.2"
-    "@composedb/devtools-node": "npm:^0.5.2"
-    "@composedb/types": "npm:^0.5.1"
-    "@didtools/pkh-ethereum": "npm:^0.4.1"
-    "@safe-global/safe-deployments": "npm:^1.28.0"
-    "@types/graphql": "npm:^14.5.0"
-    axios: "npm:^1.6.0"
-    did-session: "npm:^2.1.1"
-    dids: "npm:^4.0.4"
-    graphql: "npm:^16.8.1"
-    key-did-provider-ed25519: "npm:^3.0.2"
-    key-did-resolver: "npm:^3.0.0"
-    uint8arrays: "npm:^4.0.9"
-  checksum: bb98b651aa0e788d17b3181c25851964fa20bee5f27fe0b3c32866ee82099016d28c8b3f6272b1ef747308aa86c4916066fe417c00c1703d5b15ce7004ceddb4
   languageName: node
   linkType: hard
 
@@ -6896,7 +6896,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "dsafe-demo@workspace:."
   dependencies:
-    "@dsafe/sdk": "npm:^1.1.0"
+    "@daoism-systems/dsafe-sdk": "npm:^1.1.2"
     "@rabby-wallet/rabbykit": "npm:^0.0.4"
     "@rainbow-me/rainbowkit": "npm:^2.0.0"
     "@safe-global/safe-deployments": "npm:^1.32.0"

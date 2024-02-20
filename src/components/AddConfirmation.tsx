@@ -5,7 +5,7 @@ import AnimatedInput from './AnimatedInput'
 import If from './If'
 import { Button } from 'flowbite-react'
 
-import DSafe from '@dsafe/sdk'
+import DSafe from '@daoism-systems/dsafe-sdk'
 import { useAccount } from 'wagmi'
 
 type Props = {}

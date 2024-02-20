@@ -12,7 +12,7 @@ import {
   useWriteContract,
 } from 'wagmi'
 import { readContract } from 'viem/actions'
-import DSafe from '@dsafe/sdk'
+import DSafe from '@daoism-systems/dsafe-sdk'
 import { Abi, createPublicClient, getContract, http, toBytes } from 'viem'
 import { sepolia } from 'viem/chains'
 import { ethers } from 'ethers'
