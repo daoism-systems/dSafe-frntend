@@ -1,35 +1,24 @@
 import React, { useEffect, useState } from 'react'
 import AnimatedInput from './AnimatedInput'
 import { Button } from 'flowbite-react'
-import AnimatedSelect from './animatedSelect'
-import { fakeSafesOfOwner, trxInput } from '../FakeData'
+import { trxInput } from '../FakeData'
 import { getSafeSingletonDeployment } from '@safe-global/safe-deployments'
-import {
-  useAccount,
-  useClient,
-  useReadContract,
-  useSignMessage,
-  useWriteContract,
-} from 'wagmi'
-import { readContract } from 'viem/actions'
-import definition from '../definitions/definitions.dev.js'
+import { useAccount, useClient, useReadContract, useSignMessage } from 'wagmi'
+// @ts-expect-error definitions to work without type definitions
+import { definition } from '../definitions.dev.js'
 import DSafe from '@daoism-systems/dsafe-sdk'
-import { Abi, createPublicClient, getContract, http, toBytes } from 'viem'
+import { getContract, toBytes } from 'viem'
 import { sepolia } from 'viem/chains'
-import { ethers } from 'ethers'
 
-import { arrayify } from 'ethers/lib/utils.js'
 import axios, { AxiosRequestConfig } from 'axios'
 import { CERAMIC_NETWORK, CHAIN_ID } from '../constants'
-
-type Props = {}
 
 const chainId = CHAIN_ID
 const ceramicNodeNetwork = CERAMIC_NETWORK
 
-const dsafe = new DSafe(chainId, ceramicNodeNetwork, definition)
+const dsafe = new DSafe(chainId, ceramicNodeNetwork, undefined, definition)
 
-const AddTransaction = (props: Props) => {
+const AddTransaction = () => {
   const [isTest, setIsTest] = useState(true)
   const [safeAddress, setSafeAddress] = useState('')
   const [nonce, setNonce] = useState('')

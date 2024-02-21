@@ -3,19 +3,68 @@ import AnimatedInput from './AnimatedInput'
 import { fakeSafesOfOwner, fakeTxsData } from '../FakeData'
 import AnimatedSelect from './animatedSelect'
 import If from './If'
+import DSafe from '@daoism-systems/dsafe-sdk'
+import { useAccount, useClient } from 'wagmi'
+import { CERAMIC_NETWORK, CHAIN_ID } from '../constants'
+// @ts-expect-error def
+import { definition } from '../definitions.dev.js'
+import { config } from './RainbowKit.js'
 
-const GetAllTransactions = () => {
+interface Props {
+  dsafe: DSafe | null
+}
+
+const GetAllTransactions = (props: Props) => {
   const [selectedSafe, setSelectedSafe] = React.useState<string>('')
   const [selectedTransaction, setSelectedTransaction] =
     React.useState<string>('')
   const [transactions, setTransactions] = React.useState<
     Record<string, string | number>[]
   >([])
+  const [safes, setSafes] = React.useState<string[]>([])
   const [transaction, setTransaction] =
     React.useState<Record<string, string | number>>()
 
+  // const account = useAccount()
+
+  const account = '0x67BE2C36e75B7439ffc2DCb99dBdF4fbB2455930'
+
+  const client = useClient()
+
+  useEffect(() => {
+    // STEP 1: Fetch safes of connected user
+
+    const dsafe = new DSafe(CHAIN_ID, CERAMIC_NETWORK, undefined, definition)
+
+    dsafe
+      .initializeDIDOnClient(client, `${account}`)
+      .then(() => {
+        const did = dsafe?.did
+        alert(did)
+      })
+      .catch((err) => {
+        console.error({ err })
+        alert(err)
+      })
+
+    const httpMethod = 'GET'
+    const apiRoute = `/v1/api/owners/${account}/safes/`
+    const payload = {}
+    const network = CHAIN_ID
+
+    dsafe
+      ?.fetchLegacy(httpMethod, apiRoute, payload, network)
+      .then((dsafeResponse) => {
+        console.log({ dsafeResponse })
+      })
+
+    // setSafes here
+    setSafes([...fakeSafesOfOwner])
+  }, [client])
+
   useEffect(() => {
     // TODO: fetch transactions of safe
+    // dsafe?.fetchLegacy(httpMethod, apiUrl, payload, network)
 
     setTransactions(fakeTxsData)
   }, [selectedSafe])
@@ -41,7 +90,7 @@ const GetAllTransactions = () => {
         Get Transaction
       </h2>
       <AnimatedSelect
-        options={[...fakeSafesOfOwner]}
+        options={safes}
         value={selectedSafe}
         setValue={setSelectedSafe}
         placeholder="Select Safe"
