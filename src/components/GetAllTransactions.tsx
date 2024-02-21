@@ -37,9 +37,10 @@ const GetAllTransactions = (props: Props) => {
     const dsafe = new DSafe(CHAIN_ID, CERAMIC_NETWORK, undefined, definition)
 
     dsafe
-      .initializeDIDOnClient(client, `${account}`)
+      .initializeDIDOnClient(window)
       .then(() => {
         const did = dsafe?.did
+        console.log(did);
         alert(did)
       })
       .catch((err) => {

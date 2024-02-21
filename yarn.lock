@@ -837,9 +837,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@daoism-systems/dsafe-sdk@npm:^1.1.6":
-  version: 1.1.6
-  resolution: "@daoism-systems/dsafe-sdk@npm:1.1.6"
+"@daoism-systems/dsafe-sdk@npm:^1.1.8":
+  version: 1.1.8
+  resolution: "@daoism-systems/dsafe-sdk@npm:1.1.8"
   dependencies:
     "@apollo/client": "npm:^3.8.7"
     "@ceramicnetwork/http-client": "npm:^3.0.5"
@@ -856,7 +856,7 @@ __metadata:
     key-did-provider-ed25519: "npm:^3.0.2"
     key-did-resolver: "npm:^3.0.0"
     uint8arrays: "npm:^4.0.9"
-  checksum: 69cea7cf558566a59277c5d240540874dd75f67445258f2abb95d6d0cf6dd043d15fb54b943de1bfadaa209016949f661c3f0a6b21f55a9a49260d3f807672cf
+  checksum: 4ca18758432ca6be4419e89645a5fd78e619cdae7bb626830961ff9cdaf35e38ab16b22c46b48bae8e52c8ef7b0932936a5d09f021faa4b8e23f76e4de36c0d9
   languageName: node
   linkType: hard
 
@@ -6896,7 +6896,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "dsafe-demo@workspace:."
   dependencies:
-    "@daoism-systems/dsafe-sdk": "npm:^1.1.6"
+    "@daoism-systems/dsafe-sdk": "npm:^1.1.8"
     "@rabby-wallet/rabbykit": "npm:^0.0.4"
     "@rainbow-me/rainbowkit": "npm:^2.0.0"
     "@safe-global/safe-deployments": "npm:^1.32.0"

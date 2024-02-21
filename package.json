@@ -10,7 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@daoism-systems/dsafe-sdk": "^1.1.6",
+    "@daoism-systems/dsafe-sdk": "^1.1.8",
     "@rabby-wallet/rabbykit": "^0.0.4",
     "@rainbow-me/rainbowkit": "^2.0.0",
     "@safe-global/safe-deployments": "^1.32.0",
