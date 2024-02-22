@@ -14,7 +14,7 @@ interface Props {
   dsafe: DSafe | null
 }
 
-const GetAllTransactions = (props: Props) => {
+const GetAllTransactions = ({ dsafe }: Props) => {
   const [selectedSafe, setSelectedSafe] = React.useState<string>('')
   const [selectedTransaction, setSelectedTransaction] =
     React.useState<string>('')
@@ -24,65 +24,76 @@ const GetAllTransactions = (props: Props) => {
   const [safes, setSafes] = React.useState<string[]>([])
   const [transaction, setTransaction] =
     React.useState<Record<string, string | number>>()
+  const [transactionList, setTransactionList] =
+    React.useState<Record<string, string | number>[]>()
 
-  // const account = useAccount()
-
-  const account = '0x67BE2C36e75B7439ffc2DCb99dBdF4fbB2455930'
-
-  const client = useClient()
+  const account = useAccount()
 
   useEffect(() => {
     // STEP 1: Fetch safes of connected user
 
-    const dsafe = new DSafe(CHAIN_ID, CERAMIC_NETWORK, undefined, definition)
+    if (account.address && dsafe) {
+      const httpMethod = 'GET'
+      const apiRoute = `/v1/owners/${account.address}/safes/`
+      const payload = { address: account.address }
+      const network = CHAIN_ID
 
-    dsafe
-      .initializeDIDOnClient(client, `${account}`)
-      .then(() => {
-        const did = dsafe?.did
-        alert(did)
-      })
-      .catch((err) => {
-        console.error({ err })
-        alert(err)
-      })
+      dsafe
+        ?.fetchLegacy(httpMethod, apiRoute, payload, network)
+        .then((dsafeResponseForSafes) => {
+          console.log({ dsafeResponseForSafes })
+          const safes = dsafeResponseForSafes.data.map(
+            (safe: { safeAddress: string; id: string }) => safe.safeAddress,
+          )
 
-    const httpMethod = 'GET'
-    const apiRoute = `/v1/api/owners/${account}/safes/`
-    const payload = {}
-    const network = CHAIN_ID
-
-    dsafe
-      ?.fetchLegacy(httpMethod, apiRoute, payload, network)
-      .then((dsafeResponse) => {
-        console.log({ dsafeResponse })
-      })
-
-    // setSafes here
-    setSafes([...fakeSafesOfOwner])
-  }, [client])
+          setSafes(safes)
+        })
+        .catch((error) => {
+          console.error('Error fetching safes:', error)
+        })
+    }
+  }, [account.address, dsafe])
 
   useEffect(() => {
-    // TODO: fetch transactions of safe
-    // dsafe?.fetchLegacy(httpMethod, apiUrl, payload, network)
+    if (selectedSafe) {
+      // TODO: fetch transactions of safe
+      const httpMethod = 'GET'
+      const apiUrl = `/v1/safes/${selectedSafe}/multisig-transactions/`
+      const payload = { address: selectedSafe }
+      const network = CHAIN_ID
+      dsafe
+        ?.fetchLegacy(httpMethod, apiUrl, payload, network)
+        .then((transactionFetchResponse) => {
+          console.log({ transactionFetchResponse })
+          const foundTransactions = transactionFetchResponse.data.results
+          setTransactionList(foundTransactions)
+          const transactions = foundTransactions.map(
+            (tx: any) => tx.safeTransactionHash,
+          )
+          setTransactions(transactions)
+        })
 
-    setTransactions(fakeTxsData)
+      // setTransactions(fakeTxsData)
+    }
   }, [selectedSafe])
 
   useEffect(() => {
-    const findTransaction = () => {
-      const foundTransaction = transactions.find(
-        (tx) => tx.safeTransactionHash === selectedTransaction,
-      )
-      console.log({ foundTransaction })
+    if (selectedTransaction && transactionList) {
+      const findTransaction = () => {
+        console.log({ transactionList })
 
-      setTransaction(foundTransaction)
-    }
+        const foundTransaction = transactionList?.find((tx) => {
+          console.log({ 1: tx.safeTransactionHash, 2: selectedTransaction })
 
-    if (selectedTransaction) {
+          return tx.safeTransactionHash === selectedTransaction
+        })
+        console.log({ foundTransaction })
+
+        setTransaction(foundTransaction)
+      }
       findTransaction()
     }
-  }, [selectedTransaction])
+  }, [selectedTransaction, transactionList])
 
   return (
     <div>
@@ -100,7 +111,7 @@ const GetAllTransactions = (props: Props) => {
         then={
           <div className="mt-5">
             <AnimatedSelect
-              options={fakeTxsData.map((tx) => tx.safeTransactionHash)}
+              options={transactions}
               value={selectedTransaction}
               setValue={setSelectedTransaction}
               placeholder="Select Transaction"
@@ -122,7 +133,7 @@ const GetAllTransactions = (props: Props) => {
             <div className="flex gap-4 mt-5">
               <div className="flex-1 flex flex-col gap-4">
                 <AnimatedInput
-                  value={'0xSafeAddress1'} // TODO: change magic value here
+                  value={selectedSafe}
                   placeholder="Safe Address"
                   pattern="^0x[a-fA-F0-9]{40}$"
                   disabled

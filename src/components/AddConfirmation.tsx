@@ -7,19 +7,17 @@ import { Button } from 'flowbite-react'
 
 import DSafe from '@daoism-systems/dsafe-sdk'
 import { useAccount } from 'wagmi'
+import { CHAIN_ID } from '../constants'
 
-type Props = {}
+type Props = { dsafe: DSafe | null }
 
-const chainId = 'sepolia'
-const ceramicNodeNetwork = 'local'
-
-const dsafe = new DSafe(chainId, ceramicNodeNetwork)
-
-const AddConfirmation = (props: Props) => {
+const AddConfirmation = ({ dsafe }: Props) => {
   const [safes, setSafes] = useState<string[]>([])
-  const [transactions, setTransactions] = useState<
+  const [transactionsList, setTransactionsList] = useState<
     Record<string, string | number>[]
   >([])
+  const [transactions, setTransactions] = useState<string[]>([])
+
   const [transaction, setTransaction] =
     useState<Record<string, string | number>>()
   const [selectedSafeAddress, setSelectedSafeAddress] = useState<string>('')
@@ -27,27 +25,57 @@ const AddConfirmation = (props: Props) => {
   const account = useAccount()
 
   useEffect(() => {
-    // TODO: Fetch safes from dSafe here
-    // dsafe
-    //   .fetchLegacy('GET', `/v1/owners/${account.address}/safes/`, {
-    //     address: account.address,
-    //   })
-    //   .then((res) => {
-    //     console.log({ res })
+    console.log({ dsafe, account })
+    if (account.address && dsafe) {
+      const httpMethod = 'GET'
+      const apiRoute = `/v1/owners/${account.address}/safes/`
+      const payload = { address: account.address }
+      const network = CHAIN_ID
 
-    //   })
-    setSafes(fakeSafesOfOwner)
-  }, [])
+      dsafe
+        ?.fetchLegacy(httpMethod, apiRoute, payload, network)
+        .then((dsafeResponseForSafes) => {
+          console.log({ dsafeResponseForSafes })
+          const safes = dsafeResponseForSafes.data.map(
+            (safe: { safeAddress: string; id: string }) => safe.safeAddress,
+          )
+
+          setSafes(safes)
+        })
+        .catch((error) => {
+          console.error('Error fetching safes:', error)
+        })
+    }
+  }, [account.address, dsafe])
 
   useEffect(() => {
-    // TODO: Fetch transactions of safe from dSafe here
+    if (selectedSafeAddress && dsafe) {
+      // TODO: fetch transactions of safe
+      const httpMethod = 'GET'
+      const apiUrl = `/v1/safes/${selectedSafeAddress}/multisig-transactions/`
+      const payload = { address: selectedSafeAddress }
+      const network = CHAIN_ID
+      dsafe
+        ?.fetchLegacy(httpMethod, apiUrl, payload, network)
+        .then((transactionFetchResponse) => {
+          console.log({ transactionFetchResponse })
+          const foundTransactions = transactionFetchResponse.data.results
+          setTransactionsList(foundTransactions)
+          const transactions = foundTransactions.map(
+            (tx: any) => tx.safeTransactionHash,
+          )
+          setTransactions(transactions)
+        })
 
-    setTransactions(fakeTxsData)
-  }, [selectedSafeAddress])
+      // setTransactions(fakeTxsData)
+    }
+
+    // setTransactions(fakeTxsData)
+  }, [selectedSafeAddress, dsafe])
 
   useEffect(() => {
     const findTransaction = () => {
-      const foundTransaction = transactions.find(
+      const foundTransaction = transactionsList.find(
         (tx) => tx.safeTransactionHash === selectedTransaction,
       )
       console.log({ foundTransaction })
@@ -81,9 +109,7 @@ const AddConfirmation = (props: Props) => {
           then={
             <div className="mt-5">
               <AnimatedSelect
-                options={transactions.map(
-                  (tx) => tx.safeTransactionHash as string,
-                )}
+                options={transactions}
                 placeholder="Select Transaction"
                 value={selectedTransaction}
                 setValue={setSelectedTransaction}

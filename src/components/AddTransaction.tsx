@@ -11,14 +11,13 @@ import { getContract, toBytes } from 'viem'
 import { sepolia } from 'viem/chains'
 
 import axios, { AxiosRequestConfig } from 'axios'
-import { CERAMIC_NETWORK, CHAIN_ID } from '../constants'
+import { CHAIN_ID } from '../constants'
 
-const chainId = CHAIN_ID
-const ceramicNodeNetwork = CERAMIC_NETWORK
+interface Props {
+  dsafe: DSafe | null
+}
 
-const dsafe = new DSafe(chainId, ceramicNodeNetwork, undefined, definition)
-
-const AddTransaction = () => {
+const AddTransaction = ({ dsafe }: Props) => {
   const [isTest, setIsTest] = useState(true)
   const [safeAddress, setSafeAddress] = useState('')
   const [nonce, setNonce] = useState('')
@@ -49,22 +48,6 @@ const AddTransaction = () => {
   })
 
   useEffect(() => {
-    // TODO: fetch safe addresses from dSafe
-    // const apiRoute = `/v1/owners/${account.address}/safes/`
-    // dsafe
-    //   .fetchLegacy(
-    //     'GET',
-    //     apiRoute,
-    //     {
-    //       address: account.address,
-    //     },
-    //     chainId,
-    //   )
-    //   .then((res) => {
-    //     console.log({ res })
-    //     setSafeOptions(fakeSafesOfOwner)
-    //   })
-
     const inputs = trxInput
 
     if (isTest) {
@@ -170,12 +153,12 @@ const AddTransaction = () => {
                 contractTransactionHash: safeTxHash,
                 to: to,
                 data: data,
-                baseGas: baseGas,
-                gasPrice: gasPrice,
-                safeTxGas: safeTxGas,
-                value: value,
+                baseGas: parseInt(baseGas),
+                gasPrice: parseInt(gasPrice),
+                safeTxGas: parseInt(safeTxGas),
+                value: parseInt(value),
                 operation: operation.toString(),
-                nonce: nonce,
+                nonce: parseInt(nonce),
                 signature,
                 apiData: {
                   safe: safeAddress,
@@ -195,14 +178,18 @@ const AddTransaction = () => {
                 },
               }
 
+              console.log({ payload })
+
               const createTransactionRoute = `/v1/safes/${safeAddress}/multisig-transactions/`
 
               const options: AxiosRequestConfig = {}
               options.method = 'POST'
-              options.url = dsafe.generateApiUrl(
+              options.url = dsafe?.generateApiUrl(
                 createTransactionRoute,
-                chainId,
+                CHAIN_ID,
               )
+              console.log({ url: options.url })
+
               if (payload?.apiData !== undefined) {
                 options.data = payload.apiData
               }
@@ -210,14 +197,13 @@ const AddTransaction = () => {
                 const result = await axios.request(options)
                 console.log({ result })
               } catch (e: any) {
-                console.log({ e: e.response.data })
-                throw e
+                console.log({ e: e })
               }
-              const dsafeResponse = await dsafe.fetchLegacy(
+              const dsafeResponse = await dsafe?.fetchLegacy(
                 'POST',
                 createTransactionRoute,
                 payload,
-                chainId,
+                CHAIN_ID,
               )
               console.log({ dsafeResponse })
             },
@@ -230,7 +216,7 @@ const AddTransaction = () => {
 
         // TODO: send transaction to API
 
-        // TODO: send transaction to dSafe
+        // TODO: send transaction to dsafe
       }
     }
   }

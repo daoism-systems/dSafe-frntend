@@ -1,15 +1,13 @@
 import React, { useEffect, useState } from 'react'
-import {
-  fakeDelegateData,
-  fakeSafeDetails,
-  fakeSafesOfOwner,
-} from '../FakeData'
+import { fakeDelegateData } from '../FakeData'
 
 import { getSafeSingletonDeployment } from '@safe-global/safe-deployments'
 import AnimatedInput from './AnimatedInput'
-import { Label, Select } from 'flowbite-react'
 import AnimatedSelect from './animatedSelect'
 import If from './If'
+import DSafe from '@daoism-systems/dsafe-sdk'
+import { useAccount } from 'wagmi'
+import { CHAIN_ID } from '../constants'
 
 interface DelegateInfo {
   delegate: string
@@ -25,7 +23,11 @@ interface SelectSafeProps {
   data: SafeAddressData[]
 }
 
-const ViewDelegates: React.FC = () => {
+interface Props {
+  dsafe: DSafe | null
+}
+
+const ViewDelegates = ({ dsafe }: Props) => {
   const [selectedSafeAddress, setSelectedSafeAddress] = useState<string>('')
   const [safes, setSafes] = useState<string[]>([])
   const [delegates, setDelegates] = useState<Record<string, any>[]>([])
@@ -34,22 +36,51 @@ const ViewDelegates: React.FC = () => {
 
   const safeAbi = getSafeSingletonDeployment()?.abi
 
-  useEffect(() => {
-    // TODO: Fetch safes from dSafe here
-
-    setSafes(fakeSafesOfOwner)
-  }, [])
+  const account = useAccount()
 
   useEffect(() => {
-    // TODO: Fetch delegates from dSafe here
+    console.log({ dsafe, account })
+    if (account.address && dsafe) {
+      const httpMethod = 'GET'
+      const apiRoute = `/v1/owners/${account.address}/safes/`
+      const payload = { address: account.address }
+      const network = CHAIN_ID
 
-    if (selectedSafeAddress) {
-      const foundSafe = fakeDelegateData.find(
-        (safe) => safe.safeAddress === selectedSafeAddress,
-      )
-      if (foundSafe) {
-        setDelegates(foundSafe.delegates)
+      dsafe
+        ?.fetchLegacy(httpMethod, apiRoute, payload, network)
+        .then((dsafeResponseForSafes) => {
+          console.log({ dsafeResponseForSafes })
+          const safes = dsafeResponseForSafes.data.map(
+            (safe: { safeAddress: string; id: string }) => safe.safeAddress,
+          )
+
+          setSafes(safes)
+        })
+        .catch((error) => {
+          console.error('Error fetching safes:', error)
+        })
+    }
+  }, [account.address, dsafe])
+
+  useEffect(() => {
+    if (dsafe && selectedSafeAddress) {
+      // TODO: Fetch delegates from dSafe here
+      const httpMethod = 'GET'
+      const apiUrl = `/v1/delegates/?safe=${selectedSafeAddress}`
+      const payload = {
+        safeAddress: selectedSafeAddress,
       }
+      const network = CHAIN_ID
+
+      dsafe
+        ?.fetchLegacy(httpMethod, apiUrl, payload, network)
+        .then((delegateResponse) => {
+          console.log({ delegateResponse })
+          const foundDelegates = delegateResponse.data.results
+          console.log()
+
+          setDelegates(foundDelegates)
+        })
     }
   }, [selectedSafeAddress])
 
@@ -77,11 +108,11 @@ const ViewDelegates: React.FC = () => {
           placeholder="Select Safe"
         />
         <If
-          condition={!!selectedSafeAddress}
+          condition={!!selectedSafeAddress && delegates?.length > 0}
           then={
             <div className="mt-5">
               <AnimatedSelect
-                options={delegates.map(
+                options={delegates?.map(
                   (delegate) => delegate.delegate, // TODO: Change this according to data
                 )}
                 value={selectedDelegate}

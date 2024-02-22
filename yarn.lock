@@ -837,9 +837,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@daoism-systems/dsafe-sdk@npm:^1.1.6":
-  version: 1.1.6
-  resolution: "@daoism-systems/dsafe-sdk@npm:1.1.6"
+"@daoism-systems/dsafe-sdk@npm:^1.1.8":
+  version: 1.1.8
+  resolution: "@daoism-systems/dsafe-sdk@npm:1.1.8"
   dependencies:
     "@apollo/client": "npm:^3.8.7"
     "@ceramicnetwork/http-client": "npm:^3.0.5"
@@ -856,7 +856,7 @@ __metadata:
     key-did-provider-ed25519: "npm:^3.0.2"
     key-did-resolver: "npm:^3.0.0"
     uint8arrays: "npm:^4.0.9"
-  checksum: 69cea7cf558566a59277c5d240540874dd75f67445258f2abb95d6d0cf6dd043d15fb54b943de1bfadaa209016949f661c3f0a6b21f55a9a49260d3f807672cf
+  checksum: 4ca18758432ca6be4419e89645a5fd78e619cdae7bb626830961ff9cdaf35e38ab16b22c46b48bae8e52c8ef7b0932936a5d09f021faa4b8e23f76e4de36c0d9
   languageName: node
   linkType: hard
 
@@ -6896,7 +6896,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "dsafe-demo@workspace:."
   dependencies:
-    "@daoism-systems/dsafe-sdk": "npm:^1.1.6"
+    "@daoism-systems/dsafe-sdk": "npm:^1.1.8"
     "@rabby-wallet/rabbykit": "npm:^0.0.4"
     "@rainbow-me/rainbowkit": "npm:^2.0.0"
     "@safe-global/safe-deployments": "npm:^1.32.0"
@@ -6920,6 +6920,7 @@ __metadata:
     prettier-eslint: "npm:^16.3.0"
     react: "npm:^18.2.0"
     react-dom: "npm:^18.2.0"
+    react-hot-toast: "npm:^2.4.1"
     tailwindcss: "npm:^3.4.1"
     typescript: "npm:^5.2.2"
     viem: "npm:2.7.11"
@@ -8291,6 +8292,15 @@ __metadata:
   version: 0.1.2
   resolution: "globrex@npm:0.1.2"
   checksum: a54c029520cf58bda1d8884f72bd49b4cd74e977883268d931fd83bcbd1a9eb96d57c7dbd4ad80148fb9247467ebfb9b215630b2ed7563b2a8de02e1ff7f89d1
+  languageName: node
+  linkType: hard
+
+"goober@npm:^2.1.10":
+  version: 2.1.14
+  resolution: "goober@npm:2.1.14"
+  peerDependencies:
+    csstype: ^3.0.10
+  checksum: 184eda787a9a14cffbaa8284e98dc127095e538b4acab2a84b81babca84253bb883e16208822e02584f27c7a69f3ec47341e5060dfa40a0e07c32ac1f79b2714
   languageName: node
   linkType: hard
 
@@ -12351,6 +12361,18 @@ __metadata:
   peerDependencies:
     react: ^18.2.0
   checksum: 66dfc5f93e13d0674e78ef41f92ed21dfb80f9c4ac4ac25a4b51046d41d4d2186abc915b897f69d3d0ebbffe6184e7c5876f2af26bfa956f179225d921be713a
+  languageName: node
+  linkType: hard
+
+"react-hot-toast@npm:^2.4.1":
+  version: 2.4.1
+  resolution: "react-hot-toast@npm:2.4.1"
+  dependencies:
+    goober: "npm:^2.1.10"
+  peerDependencies:
+    react: ">=16"
+    react-dom: ">=16"
+  checksum: 591ecec3c6adc1cdb70f00165a57baa3d7f75d0d30fa767213c36496bdcc6be2b2e6a3edbf7c04f7d726a1b17dcfb5e7feb2136b04b17c9ccb769894b970f365
   languageName: node
   linkType: hard
 

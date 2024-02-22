@@ -5,7 +5,11 @@ import { fakeTxsData } from '../FakeData'
 import DSafe from '@daoism-systems/dsafe-sdk'
 import { CERAMIC_NETWORK, CERAMIC_NODE, CHAIN_ID } from '../constants'
 
-const GetTransaction = () => {
+interface Props {
+  dsafe: DSafe | null
+}
+
+const GetTransaction = ({ dsafe }: Props) => {
   const [transactionHash, setTransactionHash] = React.useState('')
   const [transaction, setTransaction] = React.useState<Record<
     string,
@@ -18,8 +22,6 @@ const GetTransaction = () => {
     e.preventDefault()
     // TODO: Modify how transaction is being fetched on search
     if (transactionHash) {
-      const dSafe = new DSafe(CHAIN_ID, CERAMIC_NETWORK)
-
       // arguements for dSafe Request
       const httpMethod = 'GET'
       const apiUrl = `/v1/multisig-transactions/${transactionHash}/`
@@ -27,7 +29,7 @@ const GetTransaction = () => {
         safeTxHash: transactionHash,
       }
 
-      const transactionsResponse = await dSafe.fetchLegacy(
+      const transactionsResponse = await dsafe?.fetchLegacy(
         httpMethod,
         apiUrl,
         payload,
@@ -36,12 +38,13 @@ const GetTransaction = () => {
 
       console.log({ transactionsResponse })
 
-      // Assuming there's a function to fetch transaction details by hash
-      // This is a placeholder for the actual fetch logic
-      const fetchedTransaction = fakeTxsData.find(
-        (tx) => tx.safeTransactionHash === transactionHash,
-      )
-      setTransaction(fetchedTransaction || null)
+      const fetchedTransaction = transactionsResponse?.data
+
+      setTransaction(fetchedTransaction)
+
+      // fetch Safe Address
+
+      const fetchedSafe = await dsafe?.fetchLegacy('GET', `/v1/`)
     }
   }
 

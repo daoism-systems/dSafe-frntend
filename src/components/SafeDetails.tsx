@@ -1,38 +1,60 @@
-import React, { useState } from 'react';
-import { fakeSafeDetails } from '../FakeData';
+import React, { useEffect, useState } from 'react'
+import { fakeSafeDetails } from '../FakeData'
+import AnimatedSelect from './animatedSelect'
+import DSafe from '@daoism-systems/dsafe-sdk'
+import { CHAIN_ID } from '../constants'
 
 interface Safe {
-  address: string;
-  nonce: number;
-  threshold: number;
-  owners: string[];
-  masterCopy: string;
-  modules: string[];
-  fallbackHandler: string;
-  guard: string;
-  version: string;
+  address: string
+  nonce: number
+  threshold: number
+  owners: string[]
+  masterCopy: string
+  modules: string[]
+  fallbackHandler: string
+  guard: string
+  version: string
 }
 
-const SafeDetails: React.FC = () => {
-  const [selectedSafeIndex, setSelectedSafeIndex] = useState<number>(0);
-  const [safes, setSafes] = useState<Array<Safe>>(fakeSafeDetails);
+const SafeDetails = ({
+  safes,
+  dsafe,
+}: {
+  safes: Record<string, any>[]
+  dsafe: DSafe | null
+}) => {
+  const [selectedSafe, setSelectedSafe] = useState('')
+  const [safe, setSafe] = useState<Record<string, any> | undefined>({})
 
-  const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedSafeIndex(Number(event.target.value));
-  };
+  useEffect(() => {
+    console.log({ selectedSafe })
 
-  const selectedSafe = safes[selectedSafeIndex];
+    if (selectedSafe) {
+      const httpMethod = 'GET'
+      const apiUrl = `/v1/safes/${selectedSafe}/`
+      const payload = {
+        address: selectedSafe,
+      }
+      const network = CHAIN_ID
+
+      dsafe
+        ?.fetchLegacy(httpMethod, apiUrl, payload, network)
+        .then((safeResponse: any) => {
+          console.log({ safeResponse })
+          setSafe(safeResponse.data)
+        })
+    }
+  }, [selectedSafe])
 
   return (
     <div>
-      <select onChange={handleChange} value={selectedSafeIndex}>
-        {safes.map((safe, index) => (
-          <option key={safe.address} value={index}>
-            {safe.address}
-          </option>
-        ))}
-      </select>
-      <table>
+      <AnimatedSelect
+        options={safes.map((safe) => safe.safeAddress)}
+        value={selectedSafe}
+        setValue={setSelectedSafe}
+        placeholder="Select Safe"
+      />
+      <table className="mt-5">
         <thead>
           <tr>
             <th>Property</th>
@@ -42,44 +64,44 @@ const SafeDetails: React.FC = () => {
         <tbody>
           <tr>
             <td>Address</td>
-            <td>{selectedSafe.address}</td>
+            <td>{safe?.address}</td>
           </tr>
           <tr>
             <td>Nonce</td>
-            <td>{selectedSafe.nonce}</td>
+            <td>{safe?.nonce}</td>
           </tr>
           <tr>
             <td>Threshold</td>
-            <td>{selectedSafe.threshold}</td>
+            <td>{safe?.threshold}</td>
           </tr>
           <tr>
             <td>Owners</td>
-            <td>{selectedSafe.owners.join(', ')}</td>
+            <td>{safe?.owners}</td>
           </tr>
           <tr>
             <td>Master Copy</td>
-            <td>{selectedSafe.masterCopy}</td>
+            <td>{safe?.masterCopy}</td>
           </tr>
           <tr>
             <td>Modules</td>
-            <td>{selectedSafe.modules.join(', ')}</td>
+            <td>{safe?.modules}</td>
           </tr>
           <tr>
             <td>Fallback Handler</td>
-            <td>{selectedSafe.fallbackHandler}</td>
+            <td>{safe?.fallbackHandler}</td>
           </tr>
           <tr>
             <td>Guard</td>
-            <td>{selectedSafe.guard}</td>
+            <td>{safe?.guard}</td>
           </tr>
           <tr>
             <td>Version</td>
-            <td>{selectedSafe.version}</td>
+            <td>{safe?.version}</td>
           </tr>
         </tbody>
       </table>
     </div>
-  );
-};
+  )
+}
 
-export default SafeDetails;
+export default SafeDetails
