@@ -1,6 +1,6 @@
 export const CHAIN_ID = 'sepolia'
 
-export const CERAMIC_NETWORK = 'local'
+export const CERAMIC_NETWORK = 'testnet'
 
 export const PAGES = [
   'Add transaction',
