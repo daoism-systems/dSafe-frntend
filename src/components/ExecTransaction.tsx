@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import AnimatedSelect from './animatedSelect'
-import { fakeSafesOfOwner, fakeTxsData, trxInput } from '../FakeData'
+import AnimatedSelect from './AnimatedSelect'
 import AnimatedInput from './AnimatedInput'
 import If from './If'
 import { Button } from 'flowbite-react'
 
-import { getContract, toBytes } from 'viem'
+import { getContract } from 'viem'
 import DSafe from '@daoism-systems/dsafe-sdk'
 import { useAccount, useClient } from 'wagmi'
 import { CHAIN_ID } from '../constants'
@@ -88,7 +87,7 @@ const ExecTransaction = ({ dsafe }: Props) => {
     }
 
     if (selectedTransaction) {
-      const transaction = findTransaction()
+      findTransaction()
     }
   }, [selectedTransaction])
 
@@ -192,11 +191,11 @@ const ExecTransaction = ({ dsafe }: Props) => {
 
       console.log({ args })
 
-      const tx = await safeInstance.write.execTransaction(args, {
-        account: account.address as `0x${string}`,
-      })
+      // const tx = await safeInstance.write.execTransaction(args, {
+      //   account: account.address as `0x${string}`,
+      // })
 
-      console.log({ tx })
+      // console.log({ tx })
 
       toast.success('Transaction Executed')
 

@@ -1,14 +1,13 @@
 import React, { useEffect } from 'react'
 import AnimatedInput from './AnimatedInput'
-import { fakeSafesOfOwner, fakeTxsData } from '../FakeData'
-import AnimatedSelect from './animatedSelect'
+
+import AnimatedSelect from './AnimatedSelect'
 import If from './If'
 import DSafe from '@daoism-systems/dsafe-sdk'
-import { useAccount, useClient } from 'wagmi'
-import { CERAMIC_NETWORK, CHAIN_ID } from '../constants'
+import { useAccount } from 'wagmi'
+import { CHAIN_ID } from '../constants'
 // @ts-expect-error def
 import { definition } from '../definitions.dev.js'
-import { config } from './RainbowKit.js'
 
 interface Props {
   dsafe: DSafe | null

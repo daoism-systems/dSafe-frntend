@@ -33,8 +33,6 @@ const AddTransaction = ({ dsafe }: Props) => {
   const [refundReceiver, setRefundReceiver] = useState('')
   const [formValid, setFormValid] = useState(false)
 
-  const [safeOptions, setSafeOptions] = useState<string[]>([])
-
   const account = useAccount()
   const client = useClient({
     chainId: sepolia.id,
@@ -49,8 +47,6 @@ const AddTransaction = ({ dsafe }: Props) => {
   })
 
   useEffect(() => {
-    const inputs = trxInput
-
     if (isTest) {
       setSafeAddress(trxInput.safeAddress)
       setTo(trxInput.to)

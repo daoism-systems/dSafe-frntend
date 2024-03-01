@@ -3,21 +3,17 @@ import './App.css'
 import { Toaster } from 'react-hot-toast'
 import AddDelegate from './components/AddDelegate'
 import ViewDelegates from './components/ViewDelegates'
-import SafeTable from './components/SafeTable'
 import AboutSafe from './components/AboutSafe'
 import Menu from './components/Menu'
 import { ConnectButton } from '@rainbow-me/rainbowkit'
 import AddTransaction from './components/AddTransaction'
-import AddConfirmation from './components/ExecTransaction'
 import GetTransaction from './components/GetTransaction'
 import GetAllTransactions from './components/GetAllTransactions'
 import DSafe from '@daoism-systems/dsafe-sdk'
 import { CERAMIC_NETWORK, CHAIN_ID, PAGE } from './constants'
 
-// @ts-expect-error defs
 import { definition } from './definitions/definitions.dev'
 import { useAccount } from 'wagmi'
-import ExecTransaction from './components/ExecTransaction'
 import If from './components/If'
 
 function App() {

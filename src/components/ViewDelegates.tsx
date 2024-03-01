@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from 'react'
-import { fakeDelegateData } from '../FakeData'
+import { useEffect, useState } from 'react'
 
 import { getSafeSingletonDeployment } from '@safe-global/safe-deployments'
 import AnimatedInput from './AnimatedInput'
-import AnimatedSelect from './animatedSelect'
+import AnimatedSelect from './AnimatedSelect'
 import If from './If'
 import DSafe from '@daoism-systems/dsafe-sdk'
 import { useAccount } from 'wagmi'
@@ -112,7 +111,7 @@ const ViewDelegates = ({ dsafe }: Props) => {
           then={
             <div className="mt-5">
               <AnimatedSelect
-                options={delegates.map(del => del.delegate)}
+                options={delegates.map((del) => del.delegate)}
                 value={selectedDelegate}
                 setValue={setSelectedDelegate}
                 placeholder="Select Delegate"
