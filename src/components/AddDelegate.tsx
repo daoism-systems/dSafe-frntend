@@ -1,18 +1,12 @@
-import React, {
-  useState,
-  ChangeEvent,
-  FormEvent,
-  FormEventHandler,
-  useEffect,
-} from 'react'
+import { useState, FormEvent, useEffect } from 'react'
 
-import { Button, Label, TextInput } from 'flowbite-react'
+import { Button } from 'flowbite-react'
 import AnimatedInput from './AnimatedInput'
 import { useAccount, useSignMessage } from 'wagmi'
 import { CHAIN_ID } from '../constants'
 import DSafe from '@daoism-systems/dsafe-sdk'
 import toast from 'react-hot-toast'
-import AnimatedSelect from './animatedSelect'
+import AnimatedSelect from './AnimatedSelect'
 
 interface Props {
   dsafe: DSafe | null
@@ -32,7 +26,8 @@ const AddDelegate = ({ dsafe }: Props) => {
   }
 
   useEffect(() => {
-    console.log({ dsafe, account })
+    // STEP 1: Fetch safes of connected user
+
     if (account.address && dsafe) {
       const httpMethod = 'GET'
       const apiRoute = `/v1/owners/${account.address}/safes/`
@@ -63,38 +58,47 @@ const AddDelegate = ({ dsafe }: Props) => {
       //   const label = 'delegator'
       const totp = Math.floor(Math.floor(Date.now() / 1000) / 3600)
       const message = `${delegateAddress}${totp}`
-      const signatureForDelegate = await signMessage.signMessage({
-        account: account.address,
-        message,
-      })
-      const label = 'delegate'
-
-      const httpMethod = 'POST'
-      const apiUrl = '/v1/delegates/'
-      const payload = {
-        safe: safeAddress,
-        delegate: delegateAddress,
-        delegator: account.address,
-        signature: signatureForDelegate,
-        label,
-        apiData: {
-          safe: safeAddress,
-          delegate: delegateAddress,
-          delegator: account.address,
-          signature: signatureForDelegate,
-          label,
+      await signMessage.signMessage(
+        {
+          account: account.address,
+          message,
         },
-      }
-      const network = CHAIN_ID
+        {
+          onSuccess: (signatureForDelegate) => {
+            const label = 'delegate'
 
-      dsafe
-        ?.fetchLegacy(httpMethod, apiUrl, payload, network)
-        .then((addDelegateDSafeResponse) => {
-          if (addDelegateDSafeResponse.status) {
-            toast.success('Added Delegate')
-            clearInputs()
-          }
-        })
+            const httpMethod = 'POST'
+            const apiUrl = '/v1/delegates/'
+            const payload = {
+              safe: safeAddress,
+              delegate: delegateAddress,
+              delegator: account.address,
+              signature: signatureForDelegate,
+              label,
+              apiData: {
+                safe: safeAddress,
+                delegate: delegateAddress,
+                delegator: account.address,
+                signature: signatureForDelegate,
+                label,
+              },
+            }
+
+            console.log({ payload })
+
+            const network = CHAIN_ID
+
+            dsafe
+              ?.fetchLegacy(httpMethod, apiUrl, payload, network)
+              .then((addDelegateDSafeResponse) => {
+                if (addDelegateDSafeResponse.status) {
+                  toast.success('Added Delegate')
+                  clearInputs()
+                }
+              })
+          },
+        },
+      )
     } else {
       // If input lengths are invalid, handle the error accordingly
       console.error('Both addresses must be exactly 42 characters long.')

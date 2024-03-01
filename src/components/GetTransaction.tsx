@@ -1,9 +1,8 @@
 import React from 'react'
 import AnimatedInput from './AnimatedInput'
 import { Button } from 'flowbite-react'
-import { fakeTxsData } from '../FakeData'
 import DSafe from '@daoism-systems/dsafe-sdk'
-import { CERAMIC_NETWORK, CERAMIC_NODE, CHAIN_ID } from '../constants'
+import { CHAIN_ID } from '../constants'
 
 interface Props {
   dsafe: DSafe | null
@@ -13,7 +12,7 @@ const GetTransaction = ({ dsafe }: Props) => {
   const [transactionHash, setTransactionHash] = React.useState('')
   const [transaction, setTransaction] = React.useState<Record<
     string,
-    string | number
+    any
   > | null>(null)
 
   const handleTransactionSearch = async (
@@ -41,10 +40,6 @@ const GetTransaction = ({ dsafe }: Props) => {
       const fetchedTransaction = transactionsResponse?.data
 
       setTransaction(fetchedTransaction)
-
-      // fetch Safe Address
-
-      const fetchedSafe = await dsafe?.fetchLegacy('GET', `/v1/`)
     }
   }
 
@@ -72,15 +67,14 @@ const GetTransaction = ({ dsafe }: Props) => {
           </h2>
 
           <div className="flex flex-col gap-4">
-            <p>
-              Nonce: <span>{transaction?.nonce}</span>
+            <p className="font-bold text-xs text-left">
+              Safe Tx Hash: <span>{transactionHash}</span>
             </p>
             <div className="flex gap-4 mt-5">
               <div className="flex-1 flex flex-col gap-4">
                 <AnimatedInput
-                  value={'0xSafeAddress1'} // TODO: change magic value here
-                  placeholder="Safe Address"
-                  pattern="^0x[a-fA-F0-9]{40}$"
+                  value={transaction?.nonce}
+                  placeholder="Nonce #"
                   disabled
                 />
                 <AnimatedInput

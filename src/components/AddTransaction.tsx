@@ -12,13 +12,14 @@ import { sepolia } from 'viem/chains'
 
 import axios, { AxiosRequestConfig } from 'axios'
 import { CHAIN_ID } from '../constants'
+import toast from 'react-hot-toast'
 
 interface Props {
   dsafe: DSafe | null
 }
 
 const AddTransaction = ({ dsafe }: Props) => {
-  const [isTest, setIsTest] = useState(true)
+  const [isTest, setIsTest] = useState(false)
   const [safeAddress, setSafeAddress] = useState('')
   const [nonce, setNonce] = useState('')
   const [to, setTo] = useState('')
@@ -206,6 +207,11 @@ const AddTransaction = ({ dsafe }: Props) => {
                 CHAIN_ID,
               )
               console.log({ dsafeResponse })
+
+              if (dsafeResponse?.status) {
+                toast.success('Added Transaction')
+                alert(`Created Transaction w/ hash: ${safeTxHash}`)
+              }
             },
           },
         )

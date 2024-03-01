@@ -1,6 +1,5 @@
 import DSafe from '@daoism-systems/dsafe-sdk'
 import SafeDetails from './SafeDetails'
-import SafeTable from './SafeTable'
 import { useEffect, useState } from 'react'
 import { CHAIN_ID } from '../constants'
 import { useAccount } from 'wagmi'

@@ -1,28 +1,17 @@
 // Navbar.js
-
-import { Children } from "react";
+import { PAGES } from '../constants'
 
 interface Props {
-  activePage: string;
-  setActivePage: (page: string) => void;
+  activePage: string
+  setActivePage: (page: string) => void
 }
 
 const Menu = ({ activePage, setActivePage }: Props) => {
-  const pages = [
-    'Create transaction',
-    'Get a transaction',
-    'Get All transactions',
-    'Add confirmation',
-    'Add delegate',
-    'View Delegate',
-    'About Safe',
-  ];
-
   return (
     <nav style={{ padding: '10px' }}>
       <ul className="flex cursor-pointer">
-        {pages.map((page) => {
-          const label = page;
+        {PAGES.map((page) => {
+          const label = page
           return (
             <li
               className={`px-4 py-2 text-lg font-medium text-gray-600 rounded-t-lg border-b-2 ${
@@ -34,11 +23,11 @@ const Menu = ({ activePage, setActivePage }: Props) => {
             >
               {label}
             </li>
-          );
+          )
         })}
       </ul>
     </nav>
-  );
-};
+  )
+}
 
-export default Menu;
+export default Menu

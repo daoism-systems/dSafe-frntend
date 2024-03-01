@@ -8,19 +8,21 @@ import AboutSafe from './components/AboutSafe'
 import Menu from './components/Menu'
 import { ConnectButton } from '@rainbow-me/rainbowkit'
 import AddTransaction from './components/AddTransaction'
-import AddConfirmation from './components/AddConfirmation'
+import AddConfirmation from './components/ExecTransaction'
 import GetTransaction from './components/GetTransaction'
 import GetAllTransactions from './components/GetAllTransactions'
 import DSafe from '@daoism-systems/dsafe-sdk'
-import { CERAMIC_NETWORK, CHAIN_ID } from './constants'
+import { CERAMIC_NETWORK, CHAIN_ID, PAGE } from './constants'
 
 // @ts-expect-error defs
 import { definition } from './definitions/definitions.dev'
 import { useAccount } from 'wagmi'
+import ExecTransaction from './components/ExecTransaction'
+import If from './components/If'
 
 function App() {
   const [dsafe, setDsafe] = useState<DSafe | null>(null)
-  const [activePage, setActivePage] = useState('Get All transactions')
+  const [activePage, setActivePage] = useState(PAGE.ADD_TRANSACTION)
 
   const account = useAccount()
 
@@ -53,19 +55,19 @@ function App() {
 
   const renderPage = () => {
     switch (activePage) {
-      case 'Add delegate':
+      case PAGE.ADD_DELEGATE:
         return <AddDelegate dsafe={dsafe} />
-      case 'View Delegate':
+      case PAGE.GET_DELEGATES:
         return <ViewDelegates dsafe={dsafe} />
-      case 'Create transaction':
+      case PAGE.ADD_TRANSACTION:
         return <AddTransaction dsafe={dsafe} />
-      case 'Add confirmation':
-        return <AddConfirmation dsafe={dsafe} />
-      case 'Get All transactions':
+      // case 'Execute transaction':
+      //   return <ExecTransaction dsafe={dsafe} />
+      case PAGE.GET_ALL_TRANSACTIONS:
         return <GetAllTransactions dsafe={dsafe} />
-      case 'Get a transaction':
+      case PAGE.GET_TRANSACTION:
         return <GetTransaction dsafe={dsafe} />
-      case 'About Safe':
+      case PAGE.ABOUT_SAFE:
         return <AboutSafe dsafe={dsafe} />
       default:
         return <div>Page not found</div>
@@ -77,12 +79,17 @@ function App() {
       <div className="text-4xl font-bold mb-6">dSafe Frontend Demo</div>
       <ConnectButton />
       <Toaster />
-      <div>
-        <Menu activePage={activePage} setActivePage={setActivePage} />
-        <div className="border border-gray-100 rounded-lg bg-white mt-12 w-full p-12">
-          {renderPage()}
-        </div>
-      </div>
+      <If
+        condition={account.isConnected}
+        then={
+          <div>
+            <Menu activePage={activePage} setActivePage={setActivePage} />
+            <div className="border border-gray-100 rounded-lg bg-white mt-12 w-full p-12">
+              {renderPage()}
+            </div>
+          </div>
+        }
+      />
     </div>
   )
 }

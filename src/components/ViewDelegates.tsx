@@ -77,7 +77,7 @@ const ViewDelegates = ({ dsafe }: Props) => {
         .then((delegateResponse) => {
           console.log({ delegateResponse })
           const foundDelegates = delegateResponse.data.results
-          console.log()
+          console.log({ foundDelegates })
 
           setDelegates(foundDelegates)
         })
@@ -112,9 +112,7 @@ const ViewDelegates = ({ dsafe }: Props) => {
           then={
             <div className="mt-5">
               <AnimatedSelect
-                options={delegates?.map(
-                  (delegate) => delegate.delegate, // TODO: Change this according to data
-                )}
+                options={delegates.map(del => del.delegate)}
                 value={selectedDelegate}
                 setValue={setSelectedDelegate}
                 placeholder="Select Delegate"

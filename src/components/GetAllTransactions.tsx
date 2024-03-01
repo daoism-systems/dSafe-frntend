@@ -18,14 +18,13 @@ const GetAllTransactions = ({ dsafe }: Props) => {
   const [selectedSafe, setSelectedSafe] = React.useState<string>('')
   const [selectedTransaction, setSelectedTransaction] =
     React.useState<string>('')
-  const [transactions, setTransactions] = React.useState<
-    Record<string, string | number>[]
-  >([])
+  const [transactions, setTransactions] = React.useState<Record<string, any>[]>(
+    [],
+  )
   const [safes, setSafes] = React.useState<string[]>([])
-  const [transaction, setTransaction] =
-    React.useState<Record<string, string | number>>()
+  const [transaction, setTransaction] = React.useState<Record<string, any>>()
   const [transactionList, setTransactionList] =
-    React.useState<Record<string, string | number>[]>()
+    React.useState<Record<string, any>[]>()
 
   const account = useAccount()
 
@@ -127,15 +126,14 @@ const GetAllTransactions = ({ dsafe }: Props) => {
           </h2>
 
           <div className="flex flex-col gap-4">
-            <p>
-              Nonce: <span>{transaction?.nonce}</span>
+            <p className="font-bold text-xs text-left">
+              Safe Tx Hash: <span>{selectedTransaction}</span>
             </p>
             <div className="flex gap-4 mt-5">
               <div className="flex-1 flex flex-col gap-4">
                 <AnimatedInput
-                  value={selectedSafe}
-                  placeholder="Safe Address"
-                  pattern="^0x[a-fA-F0-9]{40}$"
+                  value={transaction?.nonce}
+                  placeholder="Nonce"
                   disabled
                 />
                 <AnimatedInput

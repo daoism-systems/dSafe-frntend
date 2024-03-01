@@ -5,13 +5,16 @@ import AnimatedInput from './AnimatedInput'
 import If from './If'
 import { Button } from 'flowbite-react'
 
+import { getContract, toBytes } from 'viem'
 import DSafe from '@daoism-systems/dsafe-sdk'
-import { useAccount } from 'wagmi'
+import { useAccount, useClient } from 'wagmi'
 import { CHAIN_ID } from '../constants'
+import { getSafeSingletonDeployment } from '@safe-global/safe-deployments'
+import toast from 'react-hot-toast'
 
 type Props = { dsafe: DSafe | null }
 
-const AddConfirmation = ({ dsafe }: Props) => {
+const ExecTransaction = ({ dsafe }: Props) => {
   const [safes, setSafes] = useState<string[]>([])
   const [transactionsList, setTransactionsList] = useState<
     Record<string, string | number>[]
@@ -23,6 +26,7 @@ const AddConfirmation = ({ dsafe }: Props) => {
   const [selectedSafeAddress, setSelectedSafeAddress] = useState<string>('')
   const [selectedTransaction, setSelectedTransaction] = useState<string>('')
   const account = useAccount()
+  const client = useClient()
 
   useEffect(() => {
     console.log({ dsafe, account })
@@ -88,15 +92,129 @@ const AddConfirmation = ({ dsafe }: Props) => {
     }
   }, [selectedTransaction])
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleExecute = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
+    const safeAbi = getSafeSingletonDeployment()?.abi
+
+    if (safeAbi !== undefined && client !== undefined) {
+      const safeInstance = getContract({
+        abi: safeAbi,
+        address: selectedSafeAddress as `0x${string}`,
+        client,
+      })
+
+      // await signMessage(
+      //   {
+      //     account: account.address,
+      //     message: { raw: toBytes(`${safeTxHash}` as `0x${string}`) },
+      //   },
+      //   {
+      //     onSuccess: async (response) => {
+      //       const signature = response.replace(/1b$/, '1f').replace(/1c$/, '20')
+      //       console.log({ signature })
+      //       const payload = {
+      //         safe: safeAddress,
+      //         sender: account.address,
+      //         contractTransactionHash: safeTxHash,
+      //         to: to,
+      //         data: data,
+      //         baseGas: parseInt(baseGas),
+      //         gasPrice: parseInt(gasPrice),
+      //         safeTxGas: parseInt(safeTxGas),
+      //         value: parseInt(value),
+      //         operation: operation.toString(),
+      //         nonce: parseInt(nonce),
+      //         signature,
+      //         apiData: {
+      //           safe: safeAddress,
+      //           sender: account.address,
+      //           contractTransactionHash: safeTxHash,
+      //           to: to,
+      //           data: data,
+      //           gasToken: gasToken,
+      //           baseGas: baseGas,
+      //           gasPrice: gasPrice,
+      //           refundReceiver: refundReceiver,
+      //           safeTxGas: safeTxGas,
+      //           value: trxInput.value,
+      //           operation: trxInput.operation,
+      //           nonce: nonce,
+      //           signature,
+      //         },
+      //       }
+
+      //       console.log({ payload })
+
+      //       const createTransactionRoute = `/v1/safes/${safeAddress}/multisig-transactions/`
+
+      //       const options: AxiosRequestConfig = {}
+      //       options.method = 'POST'
+      //       options.url = dsafe?.generateApiUrl(
+      //         createTransactionRoute,
+      //         CHAIN_ID,
+      //       )
+      //       console.log({ url: options.url })
+
+      //       if (payload?.apiData !== undefined) {
+      //         options.data = payload.apiData
+      //       }
+      //       try {
+      //         const result = await axios.request(options)
+      //         console.log({ result })
+      //       } catch (e: any) {
+      //         console.log({ e: e })
+      //       }
+      //       const dsafeResponse = await dsafe?.fetchLegacy(
+      //         'POST',
+      //         createTransactionRoute,
+      //         payload,
+      //         CHAIN_ID,
+      //       )
+      //       console.log({ dsafeResponse })
+      //     },
+      //   },
+      // )
+
+      console.log({ safeInstance })
+
+      const args = [
+        transaction?.to,
+        transaction?.value,
+        transaction?.data,
+        transaction?.operation,
+        transaction?.safeTxGas,
+        transaction?.baseGas,
+        transaction?.gasPrice,
+        transaction?.gasToken,
+        transaction?.refundReceiver,
+        transaction?.signature,
+      ]
+
+      console.log({ args })
+
+      const tx = await safeInstance.write.execTransaction(args, {
+        account: account.address as `0x${string}`,
+      })
+
+      console.log({ tx })
+
+      toast.success('Transaction Executed')
+
+      // TODO: get SafeTransaction Hash
+
+      // TODO: get signature
+
+      // TODO: send transaction to API
+
+      // TODO: send transaction to dsafe
+    }
   }
 
   return (
     <div>
       <div>
         <h2 className="text-black text-2xl font-bold  text-left mb-6">
-          Add Confirmation
+          Execute Transaction
         </h2>
         <AnimatedSelect
           options={safes}
@@ -195,10 +313,10 @@ const AddConfirmation = ({ dsafe }: Props) => {
                   </div>
                 </div>
                 <Button
-                  type="submit"
+                  onClick={handleExecute}
                   className="bg-teal-500 text-white hover:bg-teal-600 cursor-pointer disabled:cursor-not-allowed text-center"
                 >
-                  {`Add Confirmation`}
+                  {`Execute`}
                 </Button>
               </div>
             </div>
@@ -209,4 +327,4 @@ const AddConfirmation = ({ dsafe }: Props) => {
   )
 }
 
-export default AddConfirmation
+export default ExecTransaction
