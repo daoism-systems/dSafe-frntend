@@ -4,7 +4,6 @@ import { Button } from 'flowbite-react'
 import { trxInput } from '../FakeData'
 import { getSafeSingletonDeployment } from '@safe-global/safe-deployments'
 import { useAccount, useClient, useReadContract, useSignMessage } from 'wagmi'
-// @ts-expect-error definitions to work without type definitions
 import { definition } from '../definitions.dev.js'
 import DSafe from '@daoism-systems/dsafe-sdk'
 import { getContract, toBytes } from 'viem'
@@ -112,7 +111,7 @@ const AddTransaction = ({ dsafe }: Props) => {
 
     if (isValid) {
       if (safeAbi !== undefined && client !== undefined) {
-        const safeInstance = getContract({
+        const safeInstance: any = getContract({
           abi: safeAbi,
           address: safeAddress as `0x${string}`,
           client,

@@ -6,8 +6,6 @@ import If from './If'
 import DSafe from '@daoism-systems/dsafe-sdk'
 import { useAccount } from 'wagmi'
 import { CHAIN_ID } from '../constants'
-// @ts-expect-error def
-import { definition } from '../definitions.dev.js'
 
 interface Props {
   dsafe: DSafe | null

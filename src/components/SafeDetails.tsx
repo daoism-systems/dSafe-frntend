@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import { fakeSafeDetails } from '../FakeData'
-import AnimatedSelect from './animatedSelect'
+import { useEffect, useState } from 'react'
+import AnimatedSelect from './AnimatedSelect'
 import DSafe from '@daoism-systems/dsafe-sdk'
 import { CHAIN_ID } from '../constants'
 
