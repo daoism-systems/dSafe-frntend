@@ -12,7 +12,7 @@ import GetAllTransactions from './components/GetAllTransactions'
 import DSafe from '@daoism-systems/dsafe-sdk'
 import { CERAMIC_NETWORK, CHAIN_ID, PAGE } from './constants'
 
-import { definition } from './definitions/definitions.dev'
+import { definition } from './definitions/definitions.prod'
 import { useAccount } from 'wagmi'
 import If from './components/If'
 
